@@ -16,12 +16,16 @@
 
 namespace model {
 
-struct Root {
-public:
-	Root();
-	virtual ~Root();
+struct Root
+{
+	QGraphicsRectItem* addAchivement(QString input)
+	{
+		achivements.push_back( AchivementPtr( new Achivement(input)) );
 
-	QGraphicsRectItem* addAchivement(QString input);
+		QGraphicsRectItem* polygon = new QGraphicsRectItem();
+		return polygon;
+	}
+
 
 	std::vector<AchivementPtr> achivements;
 };

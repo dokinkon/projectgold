@@ -13,9 +13,7 @@
 namespace model {
 
 class action: public model::base {
-public:
-	action();
-	virtual ~action();
+
 };
 
 } /* namespace model */

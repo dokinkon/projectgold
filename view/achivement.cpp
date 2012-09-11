@@ -1,5 +1,5 @@
 /*
- * achievement.cpp
+ * Achivement.cpp
  *
  *  Created on: 2012/9/11
  *      Author: maple
@@ -7,10 +7,10 @@
 
 #include "achivement.h"
 
-namespace model {
+namespace view {
 
-Achivement::Achivement( QString input )
-	:	title(input)
+Achivement::Achivement()
+	: QGraphicsItem()
 {
 	// TODO Auto-generated constructor stub
 
@@ -20,4 +20,4 @@ Achivement::~Achivement() {
 	// TODO Auto-generated destructor stub
 }
 
-} /* namespace model */
+} /* namespace view */

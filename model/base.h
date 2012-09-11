@@ -11,10 +11,8 @@
 
 namespace model {
 
-class base {
-public:
-	base();
-	virtual ~base();
+struct base {
+
 };
 
 } /* namespace model */

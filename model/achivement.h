@@ -20,8 +20,13 @@ typedef SHARED_PTR(Achivement) AchivementPtr;
 
 class Achivement: public model::base {
 public:
-	Achivement( QString input="");
-	virtual ~Achivement();
+	Achivement( QString input )
+		:	title(input)
+	{
+	}
+	virtual ~Achivement()
+	{
+	}
 
 	QString title;
 };
