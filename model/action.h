@@ -8,12 +8,22 @@
 #ifndef ACTION_H_
 #define ACTION_H_
 
-#include "base.h"
+#include "item.h"
 
 namespace model {
 
-class action: public model::base {
+class Action;
+typedef SHARED_PTR(Action) ActionPtr;
 
+
+struct Action: public model::Item {
+	Action( QString input )
+	{
+		setText( input );
+	}
+	virtual ~Action()
+	{
+	}
 };
 
 } /* namespace model */

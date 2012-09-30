@@ -8,9 +8,9 @@
 #ifndef ACHIVEMENT_H_
 #define ACHIVEMENT_H_
 
-#include "base.h"
+#include "item.h"
 #include <QString>
-
+#include "model/action.h"
 
 
 namespace model {
@@ -18,17 +18,26 @@ namespace model {
 class Achivement;
 typedef SHARED_PTR(Achivement) AchivementPtr;
 
-class Achivement: public model::base {
-public:
+struct  Achivement: public model::Item {
+
 	Achivement( QString input )
-		:	title(input)
 	{
+		setText( input );
 	}
 	virtual ~Achivement()
 	{
 	}
 
-	QString title;
+	ActionPtr addAction(QString input)
+	{
+		ActionPtr act = ActionPtr( new Action(input) );
+		m_actions.push_back(  act );
+
+		return act;
+	}
+
+
+	std::vector<model::ActionPtr>		m_actions;
 };
 
 } /* namespace model */

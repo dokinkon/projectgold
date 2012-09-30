@@ -18,16 +18,15 @@ namespace model {
 
 struct Root
 {
-	QGraphicsRectItem* addAchivement(QString input)
+	AchivementPtr addAchivement(QString input)
 	{
-		achivements.push_back( AchivementPtr( new Achivement(input)) );
+		AchivementPtr ach = AchivementPtr( new Achivement(input));
+		m_achivements.push_back(  ach );
 
-		QGraphicsRectItem* polygon = new QGraphicsRectItem();
-		return polygon;
+		return ach;
 	}
 
-
-	std::vector<AchivementPtr> achivements;
+	std::vector<AchivementPtr> m_achivements;
 };
 
 typedef SHARED_PTR(Root) RootPtr;

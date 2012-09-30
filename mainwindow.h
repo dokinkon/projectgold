@@ -7,6 +7,7 @@
 
 #include "ui_mainwindow.h"
 #include "model/root.h"
+#include "view/achivement.h"
 
 class MindMapScene;
 class QAction;
@@ -22,10 +23,14 @@ public:
 
 public slots:
 	void newAchivement();
+	void newActionItem();
+	void slotSceneSelectionChanged();
+    void updateActions();
 
 private:
 	model::RootPtr model;
 	MindMapScene*	m_scene;
+	view::Achivement* m_selected_achivement;
 };
 
 #endif

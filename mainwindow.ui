@@ -16,7 +16,11 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="0">
-     <widget class="QGraphicsView" name="MindMapView"/>
+     <widget class="QGraphicsView" name="MindMapView">
+      <property name="viewportUpdateMode">
+       <enum>QGraphicsView::BoundingRectViewportUpdate</enum>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>
