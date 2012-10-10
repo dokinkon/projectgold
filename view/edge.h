@@ -29,6 +29,9 @@ private:
 
     QPointF sourcePoint;
     QPointF destPoint;
+    QPointF _controlPoint1;
+    QPointF _controlPoint2;
+
     qreal arrowSize;
 };
 

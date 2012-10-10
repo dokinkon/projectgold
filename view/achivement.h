@@ -28,6 +28,8 @@ struct Achivement : public Item
 		return p_achivement_data;
 	}
 
+    int type() const;
+
 private:
 	model::AchivementPtr	p_achivement_data;
 

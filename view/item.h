@@ -20,23 +20,26 @@ class Edge;
 class Item : public QGraphicsTextItem
 {
 public:
+    enum {
+        kAchievement = UserType + 5,
+        kAction
+    } Type;
+
 	Item( model::ItemPtr data )
 		: QGraphicsTextItem()
 		, m_data( data )
-	{
+    {
+        setFlag(ItemIsMovable);
+        setFlag(ItemSendsGeometryChanges);
+        setFlag(ItemIsSelectable);
 
-		 setFlag(ItemIsMovable);
-		 setFlag(ItemSendsGeometryChanges);
-		 setFlag(ItemIsSelectable);
+        setCacheMode(DeviceCoordinateCache);
+        setZValue(-1);
 
-		 setCacheMode(DeviceCoordinateCache);
-		 setZValue(-1);
+        setTextInteractionFlags( Qt:: NoTextInteraction );
 
-//		 setTextInteractionFlags( Qt:: TextEditorInteraction );
-     	setTextInteractionFlags( Qt:: NoTextInteraction );
-
-		 updateView();
-	}
+        updateView();
+    }
 	void updateView()
 	{
 		setPlainText( m_data->text() );
@@ -61,6 +64,10 @@ public:
 	QVariant itemChange(GraphicsItemChange change, const QVariant &value);
 
 	void addEdge( Edge *edge);
+
+    QRectF boundingRect() const;
+
+    void paint(QPainter*, const QStyleOptionGraphicsItem * option, QWidget * widget);
 
 private:
 	model::ItemPtr m_data;

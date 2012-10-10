@@ -20,6 +20,7 @@ class MainWindow : public QMainWindow, private Ui::MainWindow
 
 public:
     MainWindow(QWidget *parent = 0);
+    ~MainWindow();
 
 public slots:
 	void newAchivement();
@@ -28,9 +29,12 @@ public slots:
     void updateActions();
 
 private:
+    struct Private;
+    Private* m_pvt;
 	model::RootPtr model;
 	MindMapScene*	m_scene;
 	view::Achivement* m_selected_achivement;
+    QTabWidget* m_tabwidget;
 };
 
 #endif

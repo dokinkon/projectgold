@@ -20,6 +20,7 @@ Edge::Edge(Item *sourceItem, Item *destItem)
     dest = destItem;
     source->addEdge(this);
     dest->addEdge(this);
+    setZValue(-2);
     adjust();
 }
 
@@ -50,6 +51,17 @@ void Edge::adjust()
     } else {
         sourcePoint = destPoint = line.p1();
     }
+
+    sourcePoint = source->scenePos() + QPointF(source->boundingRect().width()/2, source->boundingRect().height()/2);
+    destPoint   = dest->scenePos()   + QPointF(dest->boundingRect().width()/2, dest->boundingRect().height()/2);
+
+    const int x = sourcePoint.x() * .75f + destPoint.x() * .25f;
+
+    _controlPoint1.setX(x);
+    _controlPoint1.setY(destPoint.y());
+
+    _controlPoint2.setX(x);
+    _controlPoint2.setY(destPoint.y());
 }
 
 QRectF Edge::boundingRect() const
@@ -75,8 +87,8 @@ void Edge::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
     if (qFuzzyCompare(line.length(), qreal(0.)))
         return;
 
-    painter->setPen(QPen(Qt::black, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-    painter->drawLine(line);
+    painter->setPen(QPen(QColor(128, 128, 128), 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+    //painter->drawLine(line);
 
     double angle = ::acos(line.dx() / line.length());
     if (line.dy() >= 0)
@@ -91,9 +103,17 @@ void Edge::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
     QPointF destArrowP2 = destPoint + QPointF(sin(angle - Pi + Pi / 3) * arrowSize,
                                               cos(angle - Pi + Pi / 3) * arrowSize);
 
-    painter->setBrush(Qt::black);
-    painter->drawPolygon(QPolygonF() << line.p1() << sourceArrowP1 << sourceArrowP2);
-    painter->drawPolygon(QPolygonF() << line.p2() << destArrowP1 << destArrowP2);
+    painter->setBrush(QBrush(QColor(0, 0, 0, 0)));
+    QPainterPath path;
+    path.moveTo(sourcePoint);
+    path.cubicTo(_controlPoint1, _controlPoint2, destPoint);
+    //path.cubicTo(_controlPoint2, _controlPoint1, sourcePoint);
+
+
+    painter->drawPath(path);
+    
+    //painter->drawPolygon(QPolygonF() << line.p1() << sourceArrowP1 << sourceArrowP2);
+    //painter->drawPolygon(QPolygonF() << line.p2() << destArrowP1 << destArrowP2);
 }
 
 

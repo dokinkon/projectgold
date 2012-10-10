@@ -18,26 +18,29 @@ namespace model {
 class Achivement;
 typedef SHARED_PTR(Achivement) AchivementPtr;
 
-struct  Achivement: public model::Item {
+class Achivement: public model::Item
+{
+public:
+    Achivement( QString input )
+    {
+        setText( input );
+    }
+    virtual ~Achivement()
+    {
+    }
 
-	Achivement( QString input )
-	{
-		setText( input );
-	}
-	virtual ~Achivement()
-	{
-	}
+    virtual int type() const;
 
-	ActionPtr addAction(QString input)
-	{
-		ActionPtr act = ActionPtr( new Action(input) );
-		m_actions.push_back(  act );
+    ActionPtr addAction(QString input)
+    {
+        ActionPtr act = ActionPtr( new Action(input) );
+        m_actions.push_back(  act );
 
-		return act;
-	}
+        return act;
+    }
 
-
-	std::vector<model::ActionPtr>		m_actions;
+private:
+    std::vector<model::ActionPtr>		m_actions;
 };
 
 } /* namespace model */

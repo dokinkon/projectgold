@@ -8,6 +8,7 @@
 #ifndef ACTION_H_
 #define ACTION_H_
 
+#include "fwdeclaration.h"
 #include "item.h"
 
 namespace model {
@@ -16,14 +17,31 @@ class Action;
 typedef SHARED_PTR(Action) ActionPtr;
 
 
-struct Action: public model::Item {
-	Action( QString input )
-	{
-		setText( input );
-	}
-	virtual ~Action()
-	{
-	}
+class Action: public model::Item 
+{
+    Q_OBJECT
+public:
+	Action( QString input, Achievement* achievement = 0 );
+	virtual ~Action();
+    virtual int type() const;
+
+    Achievement* achievement() const;
+
+    void setPeople(const QString&);
+    QString people() const;
+
+    void setMoney(int);
+    int money() const;
+
+    void setTime(int);
+    int time() const;
+
+    void addDependence(ActionPtr);
+    void removeDependence(ActionPtr);
+
+private:
+    struct Private;
+    Private* m_pvt;
 };
 
 } /* namespace model */

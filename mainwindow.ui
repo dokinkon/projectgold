@@ -14,15 +14,7 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="0">
-     <widget class="QGraphicsView" name="MindMapView">
-      <property name="viewportUpdateMode">
-       <enum>QGraphicsView::BoundingRectViewportUpdate</enum>
-      </property>
-     </widget>
-    </item>
-   </layout>
+   <layout class="QGridLayout" name="gridLayout"/>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -30,7 +22,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>28</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -98,7 +90,7 @@
     <string>New Action Item</string>
    </property>
    <property name="shortcut">
-    <string>I</string>
+    <string>Ctrl+A</string>
    </property>
   </action>
  </widget>

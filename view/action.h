@@ -26,6 +26,11 @@ struct Action : public Item
 		return p_action_data;
 	}
 
+    int type() const
+    {
+        return kAction;
+    }
+
 private:
 	model::ActionPtr	p_action_data;
 };
