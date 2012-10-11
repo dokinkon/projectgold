@@ -26,6 +26,8 @@ struct Root
 		return ach;
 	}
 
+    void deleteAchivement(AchivementPtr);
+
 	std::vector<AchivementPtr> m_achivements;
 };
 

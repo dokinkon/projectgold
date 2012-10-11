@@ -32,10 +32,10 @@ QGraphicsScene* BaseModel::mindMapScene() const
 }
 
 // will move to controller
-void BaseModel::createAchivement()
+AchivementPtr BaseModel::createAchivement()
 {
-    AchivementPtr ptr =	m_pvt->root.addAchivement(tr("[no name achivement]"));
-    emit changed(Create, QList<Item*>() << ptr.get());
+    return m_pvt->root.addAchivement(tr("[no name achivement]"));
+    //emit changed(Create, QList<Item*>() << ptr.get());
 }
 
 // will move to controller

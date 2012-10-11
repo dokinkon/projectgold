@@ -24,6 +24,9 @@ public:
     virtual ~BaseModel();
 
     QGraphicsScene* mindMapScene() const;
+
+    AchivementPrt createAchivement();
+
     
 signals:
 
