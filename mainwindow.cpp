@@ -2,53 +2,60 @@
 #include <QtGui>
 
 #include "mainwindow.h"
+#include "ui_mainwindow.h"
 #include "mindmapscene.h"
 #include "controller.h"
 #include "view/actiondependence.h"
-#include "view/achievement.h"
-#include "view/action.h"
-#include "view/edge.h"
 #include "model/basemodel.h"
 
 
-struct MainWindow::Private
+struct MainWindow::Private : public Ui::MainWindow
 {
     model::BaseModel model;
     Controller* controller;
+
+    Private()
+        : controller(NULL)
+    {
+    }
 };
 
 
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
-	//, m_scene( new MindMapScene(this) )
     , m_pvt(new Private)
 {
-    setupUi(this);
-
     m_pvt->controller = new Controller(this);
     m_pvt->controller->setModel(&m_pvt->model);
 
+    // setup Ui
+    m_pvt->setupUi(this);
 
-    m_tabwidget = new QTabWidget(this);
-    setCentralWidget(m_tabwidget);
-    m_tabwidget->setTabShape(QTabWidget::Triangular);
-    QGraphicsView* mindMapView = new QGraphicsView(m_tabwidget);
-    m_tabwidget->addTab(mindMapView, tr("MindMap"));
+    // mindmapview
+    QTabWidget* tabWidget = new QTabWidget(this);
+    tabWidget->setTabShape(QTabWidget::Triangular);
+    QGraphicsView* mindMapView = new QGraphicsView(tabWidget);
     mindMapView->setScene(m_pvt->controller->mindMapScene());
+    tabWidget->addTab(mindMapView, tr("MindMap"));
 
-    view::ActionDependence* depView = new view::ActionDependence(m_tabwidget);
+    // actiondependenceview
+    view::ActionDependence* depView = new view::ActionDependence(tabWidget);
     depView->setModel(&m_pvt->model);
-    m_tabwidget->addTab(depView, tr("ActionDependence"));
+    tabWidget->addTab(depView, tr("ActionDependence"));
 
-    model = model::RootPtr( new model::Root() );
+    setCentralWidget(tabWidget);
 
-    connect(newAchivementAction,
+
+
+    //model = model::RootPtr( new model::Root() );
+
+    connect(m_pvt->newAchivementAction,
             SIGNAL(triggered()),
             m_pvt->controller,
             SLOT(createAchievement()));
 
-    connect(newActionItemAction,
+    connect(m_pvt->newActionItemAction,
             SIGNAL(triggered()),
             m_pvt->controller,
             SLOT(createAction()));
@@ -57,11 +64,11 @@ MainWindow::MainWindow(QWidget *parent)
     //connect( newAchivementAction, SIGNAL(triggered()), &m_pvt->model, SLOT( createAchivement() ) );
 
     //connect( newActionItemAction, SIGNAL(triggered()), this, SLOT( newActionItem() ) );
-	//connect( m_scene, SIGNAL(selectionChanged()), this, SLOT( slotSceneSelectionChanged() ) );
+    //connect( m_scene, SIGNAL(selectionChanged()), this, SLOT( slotSceneSelectionChanged() ) );
 
     //MindMapView -> setScene( m_scene );
 
-    updateActions();
+    //updateActions();
 }
 
 MainWindow::~MainWindow()
@@ -71,51 +78,53 @@ MainWindow::~MainWindow()
 
 void MainWindow::newAchivement()
 {
-	//model::AchivementPtr ach = model -> addAchivement(tr("[no name achivement]"));
-	//view::Achivement* item = new view::Achivement( ach );
+    //model::AchivementPtr ach = model -> addAchivement(tr("[no name achivement]"));
+    //view::Achivement* item = new view::Achivement( ach );
 
-	//m_scene -> addItem( item );
-	//updateActions();
+    //m_scene -> addItem( item );
+    //updateActions();
 }
 
 
 void MainWindow::slotSceneSelectionChanged()
 {
-	updateActions();
+    updateActions();
 }
 
 void MainWindow::updateActions()
 {
-	newActionItemAction->setEnabled(false);
-	QList<QGraphicsItem *> items = m_scene->selectedItems();
-	m_selectedAchievement = NULL;
-	foreach( QGraphicsItem* item, items)
-	{
-        view::Achievement* achivement =  qgraphicsitem_cast<view::Achievement*>( item );
-		if( !achivement )
-			continue;
+    //newActionItemAction->setEnabled(false);
+    //QList<QGraphicsItem *> items = m_scene->selectedItems();
+    //m_selectedAchievement = NULL;
+    //foreach( QGraphicsItem* item, items)
+    //{
+        //view::Achievement* achivement =  qgraphicsitem_cast<view::Achievement*>( item );
+        //if( !achivement )
+            //continue;
 
-		m_selectedAchievement  = achivement;
-		newActionItemAction->setEnabled(true);
-		break;
-	}
+        //m_selectedAchievement  = achivement;
+        //newActionItemAction->setEnabled(true);
+        //break;
+    //}
 }
 
 void MainWindow::newActionItem()
 {
-	if(!m_selectedAchievement)
-	{
-		//ERROR !! do something !!
-		return;
-	}
-	model::ActionPtr act = m_selectedAchievement -> data()-> addAction(tr("[no name action]"));
-	view::Action* item = new view::Action( act );
+    //if(!m_selectedAchievement)
+    //{
+        //ERROR !! do something !!
+        //return;
+    //}
+    /*
+    model::ActionPtr act = m_selectedAchievement -> data()-> addAction(tr("[no name action]"));
+    view::Action* item = new view::Action( act );
     item->setParentItem(m_selectedAchievement);
 
-	view::Edge* edge = new view::Edge( m_selectedAchievement, item );
+    view::Edge* edge = new view::Edge( m_selectedAchievement, item );
 
-	//m_scene -> addItem( item );
-	m_scene -> addItem( edge );
+    //m_scene -> addItem( item );
+    m_scene -> addItem( edge );
 
-	updateActions();
+    updateActions();
+    */
 }

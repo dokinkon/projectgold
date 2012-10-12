@@ -1,7 +1,6 @@
 #include "basemodel.h"
 #include "root.h"
-#include "view/item.h"
-#include "view/achievement.h"
+
 
 namespace model {
 
@@ -16,7 +15,7 @@ struct BaseModel::Private
     }
 };
 
-BaseModel::BaseModel(QObject *parent) 
+BaseModel::BaseModel(QObject *parent)
     : QObject(parent)
     , m_pvt(new Private)
 {
@@ -54,14 +53,14 @@ void BaseModel::createAction()
 
     view::Achivement* achivement = qgraphicsitem_cast<view::Achivement*>( item );
 
-	model::ActionPtr act = m_selected_achivement -> data()-> addAction(tr("[no name action]"));
-	view::Action* item = new view::Action( act );
+    model::ActionPtr act = m_selected_achivement -> data()-> addAction(tr("[no name action]"));
+    view::Action* item = new view::Action( act );
     item->setParentItem(m_selected_achivement);
 
-	view::Edge* edge = new view::Edge( m_selected_achivement, item );
+    view::Edge* edge = new view::Edge( m_selected_achivement, item );
 
-	//m_scene -> addItem( item );
-	m_scene -> addItem( edge );
+    //m_scene -> addItem( item );
+    m_scene -> addItem( edge );
     */
 
 

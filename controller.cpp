@@ -1,8 +1,6 @@
 #include "controller.h"
 #include "model/basemodel.h"
-#include "view/achievement.h"
-#include "view/action.h"
-#include "view/edge.h"
+#include "view/mindmapitem.h"
 #include <QtCore>
 #include <QtGui>
 
@@ -51,7 +49,7 @@ void Controller::setModel(model::BaseModel* model)
 void Controller::createAchievement()
 {
     model::AchievementPtr ach = m_pvt->model->createAchivement();
-    mindMapScene()->addItem(new view::Achievement(ach));
+    mindMapScene()->addItem(new view::mindmap::Achievement(ach));
 }
 
 void Controller::deleteAchievement()
@@ -68,16 +66,16 @@ void Controller::createAction()
         return;
 
     QGraphicsItem* item = items.at(0);
-    if (view::Item::kAchievement!=item->type())
+    if (view::mindmap::AchievementType!=item->type())
         return;
 
-    view::Achievement* achievementItem = qgraphicsitem_cast<view::Achievement*>(item);
+    view::mindmap::Achievement* achievementItem = static_cast<view::mindmap::Achievement*>(item);
 
     model::ActionPtr act = achievementItem->data()->addAction(tr("[no name action]"));
-	view::Action* actionItem = new view::Action( act );
+    view::mindmap::Action* actionItem = new view::mindmap::Action(act);
     actionItem->setParentItem(achievementItem);
 
-    mindMapScene()->addItem(new view::Edge(achievementItem, actionItem));
+    mindMapScene()->addItem(new view::mindmap::Edge(achievementItem, actionItem));
 }
 
 

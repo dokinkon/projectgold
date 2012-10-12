@@ -5,16 +5,15 @@
 #include <QMainWindow>
 #include <QModelIndex>
 
-#include "ui_mainwindow.h"
 #include "model/root.h"
-#include "view/achievement.h"
+
 
 class MindMapScene;
 class QAction;
 class QTreeView;
 class QWidget;
 
-class MainWindow : public QMainWindow, private Ui::MainWindow
+class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
@@ -23,18 +22,17 @@ public:
     ~MainWindow();
 
 public slots:
-	void newAchivement();
-	void newActionItem();
-	void slotSceneSelectionChanged();
+    void newAchivement();
+    void newActionItem();
+    void slotSceneSelectionChanged();
     void updateActions();
 
 private:
     struct Private;
     Private* m_pvt;
-	model::RootPtr model;
-	MindMapScene*	m_scene;
-    view::Achievement* m_selectedAchievement;
-    QTabWidget* m_tabwidget;
+    //model::RootPtr model;
+    //MindMapScene*	m_scene;
+    //view::Achievement* m_selectedAchievement;
 };
 
 #endif

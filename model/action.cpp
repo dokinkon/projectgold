@@ -16,7 +16,7 @@ struct Action::Private
     }
 };
 
-Action::Action( QString input, Achievement* achievement )
+Action::Action(const QString& input, Achievement* achievement )
     : m_pvt(new Private)
 {
     m_pvt->achievement = achievement;

@@ -5,17 +5,19 @@
  *      Author: maple
  */
 
-#ifndef BASE_H_
-#define BASE_H_
-#include "global.h"
+#ifndef __MODEL_ITEM_BASE_H_
+#define __MODEL_ITEM_BASE_H_
+
+#include "fwdeclaration.h"
 #include <QString>
 #include <QObject>
 
 namespace model {
 
-class Item;
-typedef SHARED_PTR(Item) ItemPtr;
-
+enum {
+    AchievementType,
+    ActionType
+} Type;
 
 class Item : public QObject
 {
@@ -36,4 +38,4 @@ protected:
 };
 
 } /* namespace model */
-#endif /* BASE_H_ */
+#endif 

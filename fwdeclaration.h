@@ -1,6 +1,8 @@
 #ifndef FWDECLARATION_H
 #define FWDECLARATION_H
 
+#include "global.h"
+
 //QT_BEGIN_NAMESPACE
 class QMenu;
 class QPointF;
@@ -21,10 +23,15 @@ class Item;
 class Achievement;
 class Action;
 
+typedef SHARED_PTR(Item) ItemPtr;
+typedef SHARED_PTR(Achievement) AchievementPtr;
+typedef SHARED_PTR(Action) ActionPtr;
+
 } // namespace model
 
 
 namespace view {
+
 
 class BaseView;
 

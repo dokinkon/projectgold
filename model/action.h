@@ -8,20 +8,16 @@
 #ifndef ACTION_H_
 #define ACTION_H_
 
-#include "fwdeclaration.h"
 #include "item.h"
 
 namespace model {
-
-class Action;
-typedef SHARED_PTR(Action) ActionPtr;
 
 
 class Action: public model::Item 
 {
     Q_OBJECT
 public:
-	Action( QString input, Achievement* achievement = 0 );
+	Action(const QString& input, Achievement* achievement = 0);
 	virtual ~Action();
     virtual int type() const;
 
