@@ -5,8 +5,8 @@
  *      Author: maple
  */
 
-#ifndef ACHIVEMENT_H_
-#define ACHIVEMENT_H_
+#ifndef ACHIEVEMENT_H_
+#define ACHIEVEMENT_H_
 
 #include "item.h"
 #include <QString>
@@ -15,17 +15,17 @@
 
 namespace model {
 
-class Achivement;
-typedef SHARED_PTR(Achivement) AchivementPtr;
+class Achievement;
+typedef SHARED_PTR(Achievement) AchievementPtr;
 
-class Achivement: public model::Item
+class Achievement: public model::Item
 {
 public:
-    Achivement( QString input )
+    Achievement( QString input )
     {
         setText( input );
     }
-    virtual ~Achivement()
+    virtual ~Achievement()
     {
     }
 

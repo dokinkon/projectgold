@@ -1,31 +1,33 @@
 SOURCES	+=  main.cpp \
             mainwindow.cpp \
             mindmapscene.cpp \
+            controller.cpp \
             view/baseview.cpp \
             view/edge.cpp \
             view/item.cpp \
             view/actiondependence.cpp \
+            view/achievement.cpp \
             model/action.cpp \
             model/basemodel.cpp \
-            model/achivement.cpp \
-    controller.cpp
+            model/achievement.cpp \
+            model/item.cpp
 
 HEADERS	+=  mainwindow.h \
             fwdeclaration.h \
             global.h\
             actiondependence.h \
             mindmapscene.h \
-            view/achivement.h \
+            controller.h \
             view/edge.h \
             view/item.h \
             view/baseview.h \
             view/actiondependence.h \
-            model/achivement.h \
+            view/achievement.h \
             model/action.h \
             model/item.h \
             model/root.h \
             model/basemodel.h \
-    controller.h
+            model/achievement.h
 
 FORMS +=    mainwindow.ui \
             actiondependence.ui

@@ -26,12 +26,13 @@ public:
         kAction,
     } Type;
 
-	const QString text()	{	return m_text;	}
-	void setText( const QString& i )	{	m_text = i;	}
+    QString text() const;
+    void setText(const QString&);
+
     virtual int type() const = 0;
 
 protected:
-	QString m_text;
+    QString m_text;
 };
 
 } /* namespace model */

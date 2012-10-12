@@ -25,52 +25,21 @@ public:
         kAction
     } Type;
 
-	Item( model::ItemPtr data )
-		: QGraphicsTextItem()
-		, m_data( data )
-    {
-        setFlag(ItemIsMovable);
-        setFlag(ItemSendsGeometryChanges);
-        setFlag(ItemIsSelectable);
-
-        setCacheMode(DeviceCoordinateCache);
-        setZValue(-1);
-
-        setTextInteractionFlags( Qt:: NoTextInteraction );
-
-        updateView();
-    }
-	void updateView()
-	{
-		setPlainText( m_data->text() );
-	}
-
-	void mouseDoubleClickEvent ( QGraphicsSceneMouseEvent * event )
-	{
-		setTextInteractionFlags( Qt:: TextEditorInteraction );
-		QGraphicsTextItem::mouseDoubleClickEvent(event);
-//		textCursor().selectionStart ();
-//		qDebug() << "item double click\n";
-	}
-	void mousePressEvent ( QGraphicsSceneMouseEvent * event )
-	{
-		QGraphicsTextItem::mousePressEvent(event);
-	}
-	void mouseReleaseEvent ( QGraphicsSceneMouseEvent * event )
-	{
-		QGraphicsTextItem::mouseReleaseEvent(event);
-	}
-
-	QVariant itemChange(GraphicsItemChange change, const QVariant &value);
-
-	void addEdge( Edge *edge);
-
+    Item( model::ItemPtr data );
+    void updateView();
+    void addEdge( Edge *edge);
     QRectF boundingRect() const;
+
+protected:
+    void mouseDoubleClickEvent ( QGraphicsSceneMouseEvent * );
+    void mousePressEvent ( QGraphicsSceneMouseEvent * );
+    void mouseReleaseEvent ( QGraphicsSceneMouseEvent * );
+    QVariant itemChange(GraphicsItemChange change, const QVariant &value);
 
     void paint(QPainter*, const QStyleOptionGraphicsItem * option, QWidget * widget);
 
 private:
-	model::ItemPtr m_data;
+    model::ItemPtr m_data;
     QList<Edge *> m_edges;
 };
 

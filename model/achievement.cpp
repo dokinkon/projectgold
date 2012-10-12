@@ -1,8 +1,8 @@
-#include "achivement.h"
+#include "achievement.h"
 
 namespace model {
 
-int Achivement::type() const
+int Achievement::type() const
 {
     return Item::kAchievement;
 }

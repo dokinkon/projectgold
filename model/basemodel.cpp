@@ -1,5 +1,7 @@
 #include "basemodel.h"
 #include "root.h"
+#include "view/item.h"
+#include "view/achievement.h"
 
 namespace model {
 
@@ -32,7 +34,7 @@ QGraphicsScene* BaseModel::mindMapScene() const
 }
 
 // will move to controller
-AchivementPtr BaseModel::createAchivement()
+AchievementPtr BaseModel::createAchivement()
 {
     return m_pvt->root.addAchivement(tr("[no name achivement]"));
     //emit changed(Create, QList<Item*>() << ptr.get());
@@ -41,6 +43,7 @@ AchivementPtr BaseModel::createAchivement()
 // will move to controller
 void BaseModel::createAction()
 {
+    /*
     QList<QGraphicsItem*> items = m_pvt->mindMapScene->selectedItems();
     if (items.isEmpty())
         return;
@@ -59,6 +62,7 @@ void BaseModel::createAction()
 
 	//m_scene -> addItem( item );
 	m_scene -> addItem( edge );
+    */
 
 
 }

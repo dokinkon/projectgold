@@ -7,7 +7,7 @@
 
 #include "ui_mainwindow.h"
 #include "model/root.h"
-#include "view/achivement.h"
+#include "view/achievement.h"
 
 class MindMapScene;
 class QAction;
@@ -33,7 +33,7 @@ private:
     Private* m_pvt;
 	model::RootPtr model;
 	MindMapScene*	m_scene;
-	view::Achivement* m_selected_achivement;
+    view::Achievement* m_selectedAchievement;
     QTabWidget* m_tabwidget;
 };
 

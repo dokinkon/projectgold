@@ -7,6 +7,27 @@
 
 namespace view{
 
+Item::Item( model::ItemPtr data )
+    : QGraphicsTextItem()
+    , m_data( data )
+{
+    setFlag(ItemIsMovable);
+    setFlag(ItemSendsGeometryChanges);
+    setFlag(ItemIsSelectable);
+
+    setCacheMode(DeviceCoordinateCache);
+    setZValue(-1);
+
+    setTextInteractionFlags( Qt:: NoTextInteraction );
+
+    updateView();
+}
+
+void Item::updateView()
+{
+    setPlainText( m_data->text() );
+}
+
 void Item::addEdge( Edge *edge)
 {
     m_edges << edge;
@@ -60,7 +81,24 @@ void Item::paint(QPainter* painter, const QStyleOptionGraphicsItem * option, QWi
     QGraphicsTextItem::paint(painter, option, widget);
 }
 
+void Item::mouseDoubleClickEvent ( QGraphicsSceneMouseEvent * event )
+{
+    setTextInteractionFlags( Qt:: TextEditorInteraction );
+    QGraphicsTextItem::mouseDoubleClickEvent(event);
+//		textCursor().selectionStart ();
+//		qDebug() << "item double click\n";
 }
+
+void Item::mousePressEvent ( QGraphicsSceneMouseEvent * event )
+{
+    QGraphicsTextItem::mousePressEvent(event);
+}
+
+void Item::mouseReleaseEvent ( QGraphicsSceneMouseEvent * event )
+{
+    QGraphicsTextItem::mouseReleaseEvent(event);
+}
+}// namespace
 
 
 

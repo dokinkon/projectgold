@@ -1,7 +1,7 @@
 #ifndef FWDECLARATION_H
 #define FWDECLARATION_H
 
-QT_BEGIN_NAMESPACE
+//QT_BEGIN_NAMESPACE
 class QMenu;
 class QPointF;
 class QFont;
@@ -10,7 +10,8 @@ class QGraphicsLineItem;
 class QGraphicsTextItem;
 class QGraphicsScene;
 class QGraphicsSceneMouseEvent;
-QT_END_NAMESPACE
+//QT_END_NAMESPACE
+
 
 
 namespace model {

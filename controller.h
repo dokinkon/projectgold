@@ -9,15 +9,18 @@ class Controller : public QObject
     Q_OBJECT
 public:
     explicit Controller(QObject *parent = 0);
+    ~Controller();
     QGraphicsScene* mindMapScene() const;
     QGraphicsScene* actionDependenceScene() const;
 
-    void createArchievement();
-    void createAction();
+    void setModel(model::BaseModel* model);
     
 signals:
     
 public slots:
+    void createAchievement();
+    void deleteAchievement();
+    void createAction();
 
 private:
     struct Private;

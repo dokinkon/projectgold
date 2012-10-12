@@ -2,6 +2,7 @@
 #define BASEMODEL_H
 
 #include "fwdeclaration.h"
+#include "model/achievement.h"
 #include <QObject>
 #include <QGraphicsScene>
 
@@ -25,7 +26,7 @@ public:
 
     QGraphicsScene* mindMapScene() const;
 
-    AchivementPrt createAchivement();
+    AchievementPtr createAchivement();
 
     
 signals:
@@ -33,7 +34,6 @@ signals:
     void changed(int op, const QList<model::Item*>&);
     
 public slots:
-    void createAchivement();
     void createAction();
 
 private:

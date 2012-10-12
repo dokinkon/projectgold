@@ -8,32 +8,32 @@
 #ifndef _VIEW_ACHIVEMENT_H_
 #define _VIEW_ACHIVEMENT_H_
 
-#include <view/item.h>
-#include <model/achivement.h>
-#include <model/action.h>
+#include "view/item.h"
+#include "model/achievement.h"
+#include "model/action.h"
 
 namespace view {
 
-struct Achivement : public Item
+struct Achievement : public Item
 {
+    Achievement(  model::AchievementPtr data )
+        : Item( data )
+    {
+        m_achievement_data = data;
+    }
 
-	Achivement(  model::AchivementPtr data )
-		: Item( data )
-	{
-		p_achivement_data = data;
-	}
+    model::AchievementPtr data()
+    {
+        return m_achievement_data;
+    }
 
-	model::AchivementPtr data()
-	{
-		return p_achivement_data;
-	}
+    //int type() const;
 
-    int type() const;
-
-private:
-	model::AchivementPtr	p_achivement_data;
+    private:
+    model::AchievementPtr	m_achievement_data;
 
 };
 
 } /* namespace view */
+
 #endif /* ACHIVEMENT_H_ */

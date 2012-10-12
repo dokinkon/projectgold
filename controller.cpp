@@ -1,5 +1,10 @@
 #include "controller.h"
 #include "model/basemodel.h"
+#include "view/achievement.h"
+#include "view/action.h"
+#include "view/edge.h"
+#include <QtCore>
+#include <QtGui>
 
 struct Controller::Private
 {
@@ -43,18 +48,17 @@ void Controller::setModel(model::BaseModel* model)
     m_pvt->model = model;
 }
 
-void Controller::createArchievement()
+void Controller::createAchievement()
 {
-	model::AchivementPtr ach = m_pvt->model->createAchivement(tr("[no name achivement]"));
-    mindMapScene()->addItem(new view::Achivement(ach));
+    model::AchievementPtr ach = m_pvt->model->createAchivement();
+    mindMapScene()->addItem(new view::Achievement(ach));
 }
 
-void Controller::deleteAchivement()
+void Controller::deleteAchievement()
 {
-    view::Achivement* achivementView = m_pvt->selectedAchivementView();
-    if (!achivementView)
-        return;
-
+    //view::Achievement* achivementView = m_pvt->selectedAchivementView();
+    //if (!achivementView)
+        //return;
 }
 
 void Controller::createAction()
@@ -67,13 +71,13 @@ void Controller::createAction()
     if (view::Item::kAchievement!=item->type())
         return;
 
-    view::Achivement* achivementItem = qgraphicsitem_cast<view::Achivement*>(item);
+    view::Achievement* achievementItem = qgraphicsitem_cast<view::Achievement*>(item);
 
-	model::ActionPtr act = achivementItem->data()->addAction(tr("[no name action]"));
+    model::ActionPtr act = achievementItem->data()->addAction(tr("[no name action]"));
 	view::Action* actionItem = new view::Action( act );
-    actionItem->setParentItem(achivementItem);
+    actionItem->setParentItem(achievementItem);
 
-	mindMapScene()->addItem(new view::Edge(achivementItem, actionItem));
+    mindMapScene()->addItem(new view::Edge(achievementItem, actionItem));
 }
 
 

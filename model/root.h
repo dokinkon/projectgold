@@ -8,7 +8,7 @@
 #ifndef ROOT_H_
 #define ROOT_H_
 #include "global.h"
-#include "model/achivement.h"
+#include "model/achievement.h"
 #include <vector>
 #include <string>
 #include <QString>
@@ -18,17 +18,17 @@ namespace model {
 
 struct Root
 {
-	AchivementPtr addAchivement(QString input)
+    AchievementPtr addAchivement(QString input)
 	{
-		AchivementPtr ach = AchivementPtr( new Achivement(input));
+        AchievementPtr ach = AchievementPtr( new Achievement(input));
 		m_achivements.push_back(  ach );
 
 		return ach;
 	}
 
-    void deleteAchivement(AchivementPtr);
+    void deleteAchivement(AchievementPtr);
 
-	std::vector<AchivementPtr> m_achivements;
+    std::vector<AchievementPtr> m_achivements;
 };
 
 typedef SHARED_PTR(Root) RootPtr;

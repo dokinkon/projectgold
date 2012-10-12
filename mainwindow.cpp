@@ -3,8 +3,9 @@
 
 #include "mainwindow.h"
 #include "mindmapscene.h"
+#include "controller.h"
 #include "view/actiondependence.h"
-#include "view/achivement.h"
+#include "view/achievement.h"
 #include "view/action.h"
 #include "view/edge.h"
 #include "model/basemodel.h"
@@ -13,23 +14,28 @@
 struct MainWindow::Private
 {
     model::BaseModel model;
+    Controller* controller;
 };
 
 
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
-	, m_scene( new MindMapScene(this) )
+	//, m_scene( new MindMapScene(this) )
     , m_pvt(new Private)
 {
     setupUi(this);
+
+    m_pvt->controller = new Controller(this);
+    m_pvt->controller->setModel(&m_pvt->model);
+
 
     m_tabwidget = new QTabWidget(this);
     setCentralWidget(m_tabwidget);
     m_tabwidget->setTabShape(QTabWidget::Triangular);
     QGraphicsView* mindMapView = new QGraphicsView(m_tabwidget);
     m_tabwidget->addTab(mindMapView, tr("MindMap"));
-    mindMapView->setScene(m_scene);
+    mindMapView->setScene(m_pvt->controller->mindMapScene());
 
     view::ActionDependence* depView = new view::ActionDependence(m_tabwidget);
     depView->setModel(&m_pvt->model);
@@ -37,11 +43,21 @@ MainWindow::MainWindow(QWidget *parent)
 
     model = model::RootPtr( new model::Root() );
 
-    connect( newAchivementAction, SIGNAL(triggered()), this, SLOT( newAchivement() ) );
-    connect( newAchivementAction, SIGNAL(triggered()), &m_pvt->model, SLOT( createAchivement() ) );
+    connect(newAchivementAction,
+            SIGNAL(triggered()),
+            m_pvt->controller,
+            SLOT(createAchievement()));
 
-    connect( newActionItemAction, SIGNAL(triggered()), this, SLOT( newActionItem() ) );
-	connect( m_scene, SIGNAL(selectionChanged()), this, SLOT( slotSceneSelectionChanged() ) );
+    connect(newActionItemAction,
+            SIGNAL(triggered()),
+            m_pvt->controller,
+            SLOT(createAction()));
+
+
+    //connect( newAchivementAction, SIGNAL(triggered()), &m_pvt->model, SLOT( createAchivement() ) );
+
+    //connect( newActionItemAction, SIGNAL(triggered()), this, SLOT( newActionItem() ) );
+	//connect( m_scene, SIGNAL(selectionChanged()), this, SLOT( slotSceneSelectionChanged() ) );
 
     //MindMapView -> setScene( m_scene );
 
@@ -55,11 +71,11 @@ MainWindow::~MainWindow()
 
 void MainWindow::newAchivement()
 {
-	model::AchivementPtr ach = model -> addAchivement(tr("[no name achivement]"));
-	view::Achivement* item = new view::Achivement( ach );
+	//model::AchivementPtr ach = model -> addAchivement(tr("[no name achivement]"));
+	//view::Achivement* item = new view::Achivement( ach );
 
-	m_scene -> addItem( item );
-	updateActions();
+	//m_scene -> addItem( item );
+	//updateActions();
 }
 
 
@@ -72,14 +88,14 @@ void MainWindow::updateActions()
 {
 	newActionItemAction->setEnabled(false);
 	QList<QGraphicsItem *> items = m_scene->selectedItems();
-	m_selected_achivement = NULL;
+	m_selectedAchievement = NULL;
 	foreach( QGraphicsItem* item, items)
 	{
-		view::Achivement* achivement =  qgraphicsitem_cast<view::Achivement*>( item );
+        view::Achievement* achivement =  qgraphicsitem_cast<view::Achievement*>( item );
 		if( !achivement )
 			continue;
 
-		m_selected_achivement  = achivement;
+		m_selectedAchievement  = achivement;
 		newActionItemAction->setEnabled(true);
 		break;
 	}
@@ -87,16 +103,16 @@ void MainWindow::updateActions()
 
 void MainWindow::newActionItem()
 {
-	if(!m_selected_achivement)
+	if(!m_selectedAchievement)
 	{
 		//ERROR !! do something !!
 		return;
 	}
-	model::ActionPtr act = m_selected_achivement -> data()-> addAction(tr("[no name action]"));
+	model::ActionPtr act = m_selectedAchievement -> data()-> addAction(tr("[no name action]"));
 	view::Action* item = new view::Action( act );
-    item->setParentItem(m_selected_achivement);
+    item->setParentItem(m_selectedAchievement);
 
-	view::Edge* edge = new view::Edge( m_selected_achivement, item );
+	view::Edge* edge = new view::Edge( m_selectedAchievement, item );
 
 	//m_scene -> addItem( item );
 	m_scene -> addItem( edge );
