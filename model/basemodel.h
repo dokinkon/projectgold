@@ -27,15 +27,13 @@ public:
     QGraphicsScene* mindMapScene() const;
 
     AchievementPtr createAchivement();
+    ActionPtr createAction(AchievementPtr);
+    ItemPtr item(const QUuid&) const;
 
-    
 signals:
 
     void changed(int op, const QList<model::Item*>&);
     
-public slots:
-    void createAction();
-
 private:
     struct Private;
     Private* m_pvt;

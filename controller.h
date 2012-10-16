@@ -16,6 +16,8 @@ public:
     void setModel(model::BaseModel* model);
     
 signals:
+
+    void changed(int op, const QList<model::Item*>&);
     
 public slots:
     void createAchievement();

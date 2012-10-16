@@ -29,7 +29,7 @@ Action::~Action()
 
 int Action::type() const
 {
-    return Item::kAction;
+    return ActionType;
 }
 
 Achievement* Action::achievement() const

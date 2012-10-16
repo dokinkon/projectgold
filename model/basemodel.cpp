@@ -1,4 +1,5 @@
 #include "basemodel.h"
+#include "model/action.h"
 #include "root.h"
 
 
@@ -32,38 +33,18 @@ QGraphicsScene* BaseModel::mindMapScene() const
     return m_pvt->mindMapScene;
 }
 
-// will move to controller
 AchievementPtr BaseModel::createAchivement()
 {
-    return m_pvt->root.addAchivement(tr("[no name achivement]"));
-    //emit changed(Create, QList<Item*>() << ptr.get());
+    AchievementPtr achivementPtr = m_pvt->root.addAchivement(tr("no name achievement"));
+    emit changed(Create, QList<Item*>() << achivementPtr.get());
+    return achivementPtr;
 }
 
-// will move to controller
-void BaseModel::createAction()
+ActionPtr BaseModel::createAction(AchievementPtr achivementPtr)
 {
-    /*
-    QList<QGraphicsItem*> items = m_pvt->mindMapScene->selectedItems();
-    if (items.isEmpty())
-        return;
-
-    QGraphicsItem* item = items.at(0);
-    if (view::Item::kAchievement!=item->type())
-        return;
-
-    view::Achivement* achivement = qgraphicsitem_cast<view::Achivement*>( item );
-
-    model::ActionPtr act = m_selected_achivement -> data()-> addAction(tr("[no name action]"));
-    view::Action* item = new view::Action( act );
-    item->setParentItem(m_selected_achivement);
-
-    view::Edge* edge = new view::Edge( m_selected_achivement, item );
-
-    //m_scene -> addItem( item );
-    m_scene -> addItem( edge );
-    */
-
-
+    ActionPtr actionPtr = achivementPtr->addAction(tr("no name action"));
+    emit changed(Create, QList<Item*>() << static_cast<model::Item*>(actionPtr.get()));
+    return actionPtr;
 }
 
 } // namespace model

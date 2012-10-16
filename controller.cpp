@@ -1,5 +1,6 @@
 #include "controller.h"
 #include "model/basemodel.h"
+#include "model/action.h"
 #include "view/mindmapitem.h"
 #include <QtCore>
 #include <QtGui>
@@ -70,9 +71,9 @@ void Controller::createAction()
         return;
 
     view::mindmap::Achievement* achievementItem = static_cast<view::mindmap::Achievement*>(item);
+    model::ActionPtr actionPtr = m_pvt->model->createAction(achievementItem->data());
 
-    model::ActionPtr act = achievementItem->data()->addAction(tr("[no name action]"));
-    view::mindmap::Action* actionItem = new view::mindmap::Action(act);
+    view::mindmap::Action* actionItem = new view::mindmap::Action(actionPtr);
     actionItem->setParentItem(achievementItem);
 
     mindMapScene()->addItem(new view::mindmap::Edge(achievementItem, actionItem));

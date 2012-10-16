@@ -14,7 +14,7 @@ Achievement::~Achievement()
 
 int Achievement::type() const
 {
-    return Item::kAchievement;
+    return AchievementType;
 }
 
 ActionPtr Achievement::addAction(const QString& input)

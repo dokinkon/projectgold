@@ -11,22 +11,22 @@
 #include "fwdeclaration.h"
 #include <QString>
 #include <QObject>
+#include <QUuid>
 
 namespace model {
 
-enum {
+enum Type {
     AchievementType,
     ActionType
-} Type;
+};
 
 class Item : public QObject
 {
     Q_OBJECT
 public:
-    enum {
-        kAchievement,
-        kAction,
-    } Type;
+    Item(const QUuid& uuid = QUuid());
+    virtual ~Item();
+    QUuid uuid() const;
 
     QString text() const;
     void setText(const QString&);
@@ -35,6 +35,7 @@ public:
 
 protected:
     QString m_text;
+    QUuid m_uuid;
 };
 
 } /* namespace model */
