@@ -1,6 +1,7 @@
 TEMPLATE = app
 
 include (view/view.pri)
+include (controller/controller.pri)
 include (model/model.pri)
 
 SOURCES	+=  main.cpp \

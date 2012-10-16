@@ -73,6 +73,9 @@ public:
     explicit ActionDependence(QWidget *parent = 0);
     ~ActionDependence();
 
+signals:
+    void actionItemDroppedIntoWorkspace(const QString& uuid);
+
 private:
     void refreshContentImpl(int, const QList<model::Item*>&);
     struct Private;
