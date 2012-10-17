@@ -4,9 +4,9 @@ SOURCES += controller/viewcontroller.cpp \
            controller/dependenceviewcontroller.cpp \
 
 
-HEADERS += view/viewcontroller.h \
-           view/mindmapviewcontroller.h \
-           view/dependenceviewcontroller.h \
+HEADERS += controller/viewcontroller.h \
+           controller/mindmapviewcontroller.h \
+           controller/dependenceviewcontroller.h \
 
 
 

@@ -3,18 +3,18 @@
 
 #include "controller/viewcontroller.h"
 
-class DependenceViewController : public ViewController
+class ActionDependenceViewController : public ViewController
 {
     Q_OBJECT
 public:
-    explicit DependenceViewController(QObject* parent = 0);
-    virtual ~DependenceViewController();
-    void setModelAndView(model::BaseModel*, view::DependenceView*);
+    explicit ActionDependenceViewController(QObject* parent = 0);
+    virtual ~ActionDependenceViewController();
+    void setModelAndView(model::BaseModel*, view::ActionDependenceView*);
 private:
     struct Private;
     Private* m_pvt;
 private slots:
-    void actionItemDroppedIntoWorkspace(const QString& uuid);
-}
+    void didDropActionItemIntoWorkspace(const QString& uuid);
+};
 
 #endif

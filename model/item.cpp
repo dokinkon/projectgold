@@ -10,6 +10,11 @@ Item::Item(const QUuid& id)
     }
 }
 
+Item::~Item()
+{
+
+}
+
 QUuid Item::uuid() const
 {
     return m_uuid;

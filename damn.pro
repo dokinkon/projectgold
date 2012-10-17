@@ -1,4 +1,5 @@
 TEMPLATE = app
+QT += core gui
 
 include (view/view.pri)
 include (controller/controller.pri)

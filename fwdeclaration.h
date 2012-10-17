@@ -5,6 +5,7 @@
 
 //QT_BEGIN_NAMESPACE
 class QMenu;
+class QPoint;
 class QPointF;
 class QFont;
 class QColor;
@@ -34,6 +35,8 @@ namespace view {
 
 
 class BaseView;
+class ActionDependenceView;
+class MindMapView;
 
 } // namespace view
 

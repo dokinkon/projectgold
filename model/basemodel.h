@@ -5,6 +5,7 @@
 #include "model/achievement.h"
 #include <QObject>
 #include <QGraphicsScene>
+#include <QUuid>
 
 namespace model {
 
@@ -33,11 +34,11 @@ public:
 signals:
 
     void changed(int op, const QList<model::Item*>&);
-    
+
 private:
     struct Private;
     Private* m_pvt;
-    
+
 };
 
 } // namespace model

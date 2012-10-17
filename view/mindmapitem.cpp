@@ -107,7 +107,7 @@ Item::Item(model::ItemPtr data)
 
     setCacheMode(DeviceCoordinateCache);
     setZValue(-1);
-    setTextInteractionFlags(Qt:: NoTextInteraction);
+    setTextInteractionFlags(Qt::NoTextInteraction);
     updateView();
 }
 
@@ -137,6 +137,8 @@ QVariant Item::itemChange(GraphicsItemChange change, const QVariant &value)
                 if (item!=this)
                     item->setSelected(false);
             }
+        } else {
+            setTextInteractionFlags(Qt::NoTextInteraction);
         }
         break;
     default:
@@ -171,10 +173,8 @@ void Item::paint(QPainter* painter, const QStyleOptionGraphicsItem * option, QWi
 
 void Item::mouseDoubleClickEvent ( QGraphicsSceneMouseEvent * event )
 {
-    setTextInteractionFlags( Qt:: TextEditorInteraction );
+    setTextInteractionFlags(Qt::TextEditorInteraction);
     QGraphicsTextItem::mouseDoubleClickEvent(event);
-//		textCursor().selectionStart ();
-//		qDebug() << "item double click\n";
 }
 
 void Item::mousePressEvent ( QGraphicsSceneMouseEvent * event )

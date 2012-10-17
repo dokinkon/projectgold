@@ -5,7 +5,8 @@
 #include "ui_mainwindow.h"
 #include "mindmapscene.h"
 #include "controller.h"
-#include "view/actiondependence.h"
+#include "view/actiondependenceview.h"
+#include "controller/dependenceviewcontroller.h"
 #include "model/basemodel.h"
 
 
@@ -13,6 +14,8 @@ struct MainWindow::Private : public Ui::MainWindow
 {
     model::BaseModel model;
     Controller* controller;
+
+    ActionDependenceViewController* m_actionDependenceViewController;
 
     Private()
         : controller(NULL)
@@ -40,15 +43,14 @@ MainWindow::MainWindow(QWidget *parent)
     tabWidget->addTab(mindMapView, tr("MindMap"));
 
     // actiondependenceview
-    view::ActionDependence* depView = new view::ActionDependence(tabWidget);
+    view::ActionDependenceView* depView = new view::ActionDependenceView(tabWidget);
     depView->setModel(&m_pvt->model);
-    tabWidget->addTab(depView, tr("ActionDependence"));
+    tabWidget->addTab(depView, tr("ActionDependenceView"));
 
     setCentralWidget(tabWidget);
 
-
-
-    //model = model::RootPtr( new model::Root() );
+    m_pvt->m_actionDependenceViewController = new ActionDependenceViewController(this);
+    m_pvt->m_actionDependenceViewController->setModelAndView(&m_pvt->model, depView);
 
     connect(m_pvt->newAchivementAction,
             SIGNAL(triggered()),
