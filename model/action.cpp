@@ -5,7 +5,7 @@ namespace model {
 
 struct Action::Private
 {
-    Achievement* achievement;
+    QWeakPointer<Achievement> achievementPtr;
     QString people;
     int money;
     int time;
@@ -16,15 +16,15 @@ struct Action::Private
     }
 };
 
-Action::Action(const QString& input, Achievement* achievement )
+Action::Action(const QString& input, QSharedPointer<Achievement> achievementPtr, const QUuid& uuid)
+    : Item(uuid)
     : m_pvt(new Private)
 {
-    m_pvt->achievement = achievement;
-    setText( input );
+    m_pvt->achievementPtr = achievementPtr.toWeakRef();
+    setText(input);
 }
 Action::~Action()
 {
-    delete m_pvt;
 }
 
 int Action::type() const
@@ -32,15 +32,16 @@ int Action::type() const
     return ActionType;
 }
 
-Achievement* Action::achievement() const
+QWeakPointer<Achievement> Action::achievement() const
 {
-    return m_pvt->achievement;
+    return m_pvt->achievementPtr;
 }
 
 void Action::setPeople(const QString& people)
 {
     m_pvt->people = people;
 }
+
 QString Action::people() const
 {
     return m_pvt->people;
@@ -64,6 +65,7 @@ int Action::time() const
     return 0;
 }
 
+/*
 void Action::addDependence(ActionPtr)
 {
 
@@ -72,6 +74,7 @@ void Action::removeDependence(ActionPtr)
 {
 
 }
+*/
 
 
 } // namespace model

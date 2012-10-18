@@ -6,6 +6,8 @@
 #include <QObject>
 #include <QGraphicsScene>
 #include <QUuid>
+#include <QSharedPointer>
+#include <QScopedPointer>
 
 namespace model {
 
@@ -13,31 +15,35 @@ class BaseModel : public QObject
 {
     Q_OBJECT
 public:
-
-    enum {
+    enum CURD {
         Create,
         Read,
         Update,
         Delete
-    } CRUD;
-
+    };
 
     explicit BaseModel(QObject *parent = 0);
     virtual ~BaseModel();
 
-    QGraphicsScene* mindMapScene() const;
+    QSharedPointer<Achievement> createAchievement();
+    QSharedPointer<Action> createAction(const QString& uuid);
+    //ItemPtr item(const QUuid&) const;
 
-    AchievementPtr createAchivement();
-    ActionPtr createAction(AchievementPtr);
-    ItemPtr item(const QUuid&) const;
+public slots:
+    void setAchievementValue(const QString& uuid, int role, const QVariant& value);
+    void setActionValue(const QString& uuid, int role, const QVariant& value);
 
 signals:
+    void achievementCreated(QSharedPointer<Achievement> achievement);
+    void actionCreated(QSharedPointer<Action> action);
 
-    void changed(int op, const QList<model::Item*>&);
+    void achievementValueChanged(const QString& uuid, int role, const QVariant& value);
+    void actionValueChanged(const QString& uuid, int role, const QVariant& value);
 
+    //void changed(int op, const QList<model::Item*>&);
 private:
     struct Private;
-    Private* m_pvt;
+    QScopedPointer<Private> m_pvt;
 
 };
 

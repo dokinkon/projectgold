@@ -8,7 +8,7 @@ class ActionDependenceViewController : public ViewController
     Q_OBJECT
 public:
     explicit ActionDependenceViewController(QObject* parent = 0);
-    virtual ~ActionDependenceViewController();
+    ~ActionDependenceViewController();
     void setModelAndView(model::BaseModel*, view::ActionDependenceView*);
 private:
     struct Private;

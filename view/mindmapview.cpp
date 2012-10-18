@@ -254,7 +254,7 @@ namespace view {
 
 struct MindMapView::Private
 {
-    internal::WorkSpaceScene* m_workSpaceScene;
+    WorkSpaceScene* m_workSpaceScene;
 
     Private()
         : m_workSpaceScene(NULL)
@@ -303,6 +303,23 @@ bool MindMapView::selectItem(const QString& uuid)
     return false;
 }
 
+QString MindMapView::selectedAchievementItem() const
+{
+    AchievementItem* item = m_pvt->selectedAchievementItem();
+    if (!item)
+        return QString();
+
+    return item->data(KeyUuid);
+}
+
+QString MindMapView::selectedActionItem() const
+{
+    ActionItem* item = m_pvt->selectedActionItem();
+    if (!item)
+        return QString();
+    return item->data(KeyUuid);
+}
+
 bool MindMapView::createAchievementItem(const QString& uuid, const QString& text)
 {
     AchievementItem* item = new AchievementItem(uuid, text);
@@ -324,12 +341,18 @@ bool MindMapView::createActionItem(const QString& uuid, const QString& text)
 
 void MindMapView::timerEvent(QTimerEvent* ev)
 {
-    QMap<QString, QString> changedItems = m_pvt->changedItems();
-    if (changedItems.isEmpty())
-        return;
 
+    foreach (QGraphicsItem* item, items())
+    {
+        if (AchievementType!=item->type()&&ActionType!=item->type())
+            continue;
 
-
+        if (item->data(KeyDisplayText).toString()!=item->toPlainText()) {
+            const QString uuid = item->data(KeyUuid).toString();
+            changes[uuid] = item->toPlainText();
+            item->setData(KeyDisplayText, item->toPlainText());
+        }
+    }
 }
 
 } // namespace view

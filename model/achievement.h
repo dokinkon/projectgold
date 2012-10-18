@@ -9,9 +9,8 @@
 #define ACHIEVEMENT_H_
 
 #include "model/item.h"
-//#include "model/action.h"
-//#include "fwdeclaration.h"
-
+#include <QSharedPointer>
+#include <QScopedPointer>
 
 namespace model {
 
@@ -19,15 +18,16 @@ namespace model {
 class Achievement: public model::Item
 {
 public:
-    Achievement(const QString& input);
+    Achievement(const QString& text = QString(), const QUuid& uuid = QUuid());
     virtual ~Achievement();
 
     int type() const;
 
-    ActionPtr addAction(const QString& input);
+    void addAction(QSharedPointer<Action>);
 
 private:
-    std::vector<model::ActionPtr> m_actions;
+    struct Private;
+    QScopedPointer<Private> m_pvt;
 };
 
 } /* namespace model */

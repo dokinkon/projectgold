@@ -1,11 +1,19 @@
 #include "model/achievement.h"
 #include "model/action.h"
+#include <QList>
 
 namespace model {
 
-Achievement::Achievement(const QString& input )
+struct Achievement::Private
 {
-    setText( input );
+    QList<QWeakPointer<Action> > m_actions;
+};
+
+Achievement::Achievement(const QString& text, const QUuid& uuid)
+    : Item(uuid)
+    , m_pvt(new Private)
+{
+    setText(text);
 }
 
 Achievement::~Achievement()
@@ -17,11 +25,11 @@ int Achievement::type() const
     return AchievementType;
 }
 
-ActionPtr Achievement::addAction(const QString& input)
+void Achievement::addAction(QSharedPointer<Action> actionPtr)
 {
-    ActionPtr act = ActionPtr(new Action(input));
-    m_actions.push_back(act);
-    return act;
+    if (!m_pvt->m_actions.contains(actionPtr.toWeakRef())) {
+        m_pvt->m_actions << actionPtr.toWeakRef();
+    }
 }
 
 } // namespace model
