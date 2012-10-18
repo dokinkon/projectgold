@@ -10,26 +10,6 @@
 namespace view { namespace internal {
 
 
-
-
-
-class WorkSpaceScene : public QGraphicsScene
-{
-    Q_OBJECT
-public:
-    explicit WorkSpaceScene(QObject* parent = 0);
-    ~WorkSpaceScene();
-
-protected:
-    void dragEnterEvent(QGraphicsSceneDragDropEvent*);
-    void dropEvent(QGraphicsSceneDragDropEvent*);
-
-private:
-
-
-};
-
-
 class ActionListView : public QListWidget
 {
     Q_OBJECT
@@ -70,17 +50,21 @@ private:
 class ActionDependenceView : public BaseView
 {
     Q_OBJECT
-
 public:
     explicit ActionDependenceView(QWidget *parent = 0);
     ~ActionDependenceView();
 
+    void createActionInListView(const QString& uuid, const QString& text);
+    void createActionInWorkSpaceView(const QString& uuid, const QString& text);
+
     WorkSpaceView* workSpaceView() const;
 
+public slots:
+    void setActionValue(const QString& uuid, int role, const QVariant& value);
+
 private:
-    void refreshContentImpl(int, const QList<model::Item*>&);
     struct Private;
-    Private* m_pvt;
+    QScopedPointer<Private> m_pvt;
 };
 
 } // namespace

@@ -6,38 +6,8 @@
 #include <QtGui>
 #include <QtCore>
 
-
 namespace view { namespace internal {
 
-
-
-
-
-WorkSpaceScene::WorkSpaceScene(QObject* parent)
-    : QGraphicsScene(parent)
-{
-
-}
-
-WorkSpaceScene::~WorkSpaceScene()
-{
-
-}
-
-void WorkSpaceScene::dragEnterEvent(QGraphicsSceneDragDropEvent* e)
-{
-    QGraphicsScene::dragEnterEvent(e);
-}
-
-void WorkSpaceScene::dropEvent(QGraphicsSceneDragDropEvent* e)
-{
-    QGraphicsScene::dropEvent(e);
-    //qDebug() << "dropEvent";
-    //QGraphicsTextItem* item = new QGraphicsTextItem;
-    //item->setPlainText(e->mimeData()->text());
-    //item->setPos(e->scenePos());
-    //addItem(item);
-}
 
 
 
@@ -63,8 +33,7 @@ void ActionListView::startDrag(Qt::DropActions)
 {
     QListWidgetItem* item = currentItem();
     QMimeData* mimeData = new QMimeData;
-    //QByteArray ba = item->text().toLatin1().data();
-    mimeData->setData(QLatin1String("item/uuid"), item->data(33).toString().toLatin1().data());
+    mimeData->setData(QLatin1String("item/uuid"), item->data(RoleUuid).toString().toLatin1().data());
     mimeData->setText(item->text());
     QDrag* drag = new QDrag(this);
     drag->setMimeData(mimeData);
@@ -75,8 +44,6 @@ void ActionListView::startDrag(Qt::DropActions)
 
 
 namespace view {
-
-const static int UuidRole = Qt::UserRole + 5;
 
 struct WorkSpaceView::Private
 {
@@ -97,82 +64,47 @@ WorkSpaceView::~WorkSpaceView()
 
 void WorkSpaceView::dragEnterEvent(QDragEnterEvent* e)
 {
-    //qDebug() << "WorkSpaceView::dragEnterEvent:" << e->mimeData()->text();
     QGraphicsView::dragEnterEvent(e);
-    //e->acceptProposedAction();
 }
 
 void WorkSpaceView::dropEvent(QDropEvent* e)
 {
     //qDebug() << "WorkSpaceView::dropEvent:" << e->mimeData()->text();
     QGraphicsView::dropEvent(e);
-    emit actionItemDropped(e->mimeData()->text());
+    const QString uuid = QString::fromLatin1(e->mimeData()->data(QLatin1String("item/uuid")).data());
+    emit actionItemDropped(uuid);
 }
 
 void WorkSpaceView::dragMoveEvent(QDragMoveEvent* e)
 {
-    //qDebug() << "WorkSpaceView::dragMoveEvent:" << e->mimeData()->text();
     e->acceptProposedAction();
 }
+
 struct ActionDependenceView::Private : public Ui::ActionDependence
 {
-    internal::ActionListView* actionList;
-    WorkSpaceView* workSpace;
+    internal::ActionListView* m_actionListView;
+    WorkSpaceView* m_workSpaceView;
+    QGraphicsScene* m_workSpaceScene;
+
+    Private()
+        : m_actionListView(NULL)
+        , m_workSpaceView(NULL)
+        , m_workSpaceScene(NULL)
+    {
+    }
 
     QListWidgetItem* actionInListView(const QUuid& uuid)
     {
-        for (int row=0;row<actionList->count();++row)
-        {
-            QListWidgetItem* item = actionList->item(row);
-            return item;
-            //if (item->data(UuidRole).value<QUuid>()==uuid) {
-                //return item;
-            //}
-        }
+        // TODO
         return NULL;
     }
 
     QGraphicsSimpleTextItem* actionInWorkSpaceView(const QUuid& uuid)
     {
-        //foreach (QGraphicsItem* item, workSpace->items())
-        //{
-            //if (item->data(UuidRole).value<QUuid>()==uuid) {
-              //  return dynamic_cast<QGraphicsSimpleTextItem*>(item);
-            //}
-        //}
+        // TODO
         return NULL;
     }
 
-    void createItems(const QList<model::Item*>& items)
-    {
-        foreach (model::Item* modelItem, items)
-        {
-            if (model::AchievementType==modelItem->type()) {
-                qDebug() << "create achivement item";
-            } else if (model::ActionType==modelItem->type()) {
-                qDebug() << "create action item";
-                QListWidgetItem* viewItem = new QListWidgetItem(modelItem->text());
-                //viewItem->setData(UuidRole, modelItem->uuid());
-                actionList->addItem(viewItem);
-            }
-        }
-    }
-
-    void updateItems(const QList<model::Item*>& items)
-    {
-        foreach (model::Item* modelItem, items)
-        {
-            QListWidgetItem* actionItem = actionInListView(modelItem->uuid());
-            if (actionItem) {
-                actionItem->setText(modelItem->text());
-            }
-
-            QGraphicsSimpleTextItem* actionItem2 = actionInWorkSpaceView(modelItem->uuid());
-            if (actionItem2) {
-                actionItem2->setText(modelItem->text());
-            }
-        }
-    }
 };
 
 ActionDependenceView::ActionDependenceView(QWidget *parent)
@@ -182,14 +114,14 @@ ActionDependenceView::ActionDependenceView(QWidget *parent)
     m_pvt->setupUi(this);
 
     QSplitter* splitter = new QSplitter(this);
-    m_pvt->actionList = new internal::ActionListView(this);
-    m_pvt->actionList->setDragDropMode(QAbstractItemView::DragOnly);
-    splitter->addWidget(m_pvt->actionList);
+    m_pvt->m_actionListView = new internal::ActionListView(this);
+    m_pvt->m_actionListView->setDragDropMode(QAbstractItemView::DragOnly);
+    splitter->addWidget(m_pvt->m_actionListView);
 
-    m_pvt->workSpace  = new WorkSpaceView(this);
-    internal::WorkSpaceScene* workSpaceScene = new internal::WorkSpaceScene(this);
-    m_pvt->workSpace->setScene(workSpaceScene);
-    splitter->addWidget(m_pvt->workSpace);
+    m_pvt->m_workSpaceView  = new WorkSpaceView(this);
+    m_pvt->m_workSpaceScene = new QGraphicsScene(this);
+    m_pvt->m_workSpaceView->setScene(m_pvt->m_workSpaceScene);
+    splitter->addWidget(m_pvt->m_workSpaceView);
 
     splitter->setOrientation(Qt::Horizontal);
     QHBoxLayout* layout = new QHBoxLayout;
@@ -199,31 +131,47 @@ ActionDependenceView::ActionDependenceView(QWidget *parent)
 
 ActionDependenceView::~ActionDependenceView()
 {
-    delete m_pvt;
+}
+
+void ActionDependenceView::createActionInListView(const QString& uuid, const QString& text)
+{
+    QListWidgetItem* item = new QListWidgetItem(text);
+    item->setData(RoleUuid, uuid);
+    m_pvt->m_actionListView->addItem(item);
+}
+
+void ActionDependenceView::createActionInWorkSpaceView(const QString& uuid, const QString& text)
+{
+    QGraphicsSimpleTextItem* item = new QGraphicsSimpleTextItem(text);
+    item->setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable);
+    item->setData(RoleUuid, uuid);
+    m_pvt->m_workSpaceScene->addItem(item);
+}
+
+void ActionDependenceView::setActionValue(const QString& uuid, int role, const QVariant& value)
+{
+    for (int i=0;i<m_pvt->m_actionListView->count();++i)
+    {
+        QListWidgetItem* item = m_pvt->m_actionListView->item(i);
+        if (item->data(RoleUuid).toString()==uuid) {
+            item->setText(value.toString());
+            break;
+        }
+    }
+
+    foreach (QGraphicsItem* baseItem, m_pvt->m_workSpaceScene->items())
+    {
+        if (baseItem->data(RoleUuid).toString()==uuid) {
+            QGraphicsSimpleTextItem* item = dynamic_cast<QGraphicsSimpleTextItem*>(baseItem);
+            item->setText(value.toString());
+            break;
+        }
+    }
 }
 
 WorkSpaceView* ActionDependenceView::workSpaceView() const
 {
-    return m_pvt->workSpace;
-}
-
-void ActionDependenceView::refreshContentImpl(int op, const QList<model::Item*>& items)
-{
-    switch (op)
-    {
-        case model::BaseModel::Create:
-            m_pvt->createItems(items);
-            break;
-        case model::BaseModel::Read:
-            qDebug() << "read items";
-            break;
-        case model::BaseModel::Update:
-            m_pvt->updateItems(items);
-            break;
-        case model::BaseModel::Delete:
-            qDebug() << "delete items";
-            break;
-    }
+    return m_pvt->m_workSpaceView;
 }
 
 } // namespace

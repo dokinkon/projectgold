@@ -27,7 +27,7 @@ protected:
     void timerEvent(QTimerEvent*);
 private:
     struct Private;
-    QSharedPointer<Private> m_pvt;
+    QScopedPointer<Private> m_pvt;
 };
 
 } // namespace view

@@ -14,6 +14,7 @@ private:
     struct Private;
     Private* m_pvt;
 private slots:
+    void createAction(QSharedPointer<model::Action>);
     void didDropActionItemIntoWorkspace(const QString& uuid);
 };
 

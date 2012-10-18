@@ -5,7 +5,7 @@
 namespace {
 
 enum ItemType {
-    AchievementType = Qt::UserType + 1,
+    AchievementType = 65536,
     ActionType,
     EdgeType
 };
@@ -14,6 +14,8 @@ enum DataKey {
     KeyUuid,
     KeyDisplayText
 };
+
+class Item;
 
 class Edge : public QGraphicsItem
 {
@@ -49,12 +51,12 @@ protected:
             .adjusted(-extra, -extra, extra, extra);
     }
 
-    void paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*)
+    void paint(QPainter* painter, const QStyleOptionGraphicsItem*, QWidget*)
     {
         if (!m_source || !m_dest)
             return;
 
-        QLineF line(sourcePoint, destPoint);
+        QLineF line(m_sourcePoint, m_destPoint);
         if (qFuzzyCompare(line.length(), qreal(0.)))
             return;
 
@@ -82,7 +84,7 @@ public:
     Item(const QString& uuid, QGraphicsItem* parent = 0)
         : QGraphicsTextItem(parent)
     {
-        setData(KeyUuid, uuid)
+        setData(KeyUuid, uuid);
         setFlag(ItemIsMovable);
         setFlag(ItemSendsGeometryChanges);
         setFlag(ItemIsSelectable);
@@ -135,7 +137,7 @@ protected:
         return QGraphicsItem::itemChange(change, value);
     }
 
-    void paint(QPainter* painter, const QStyleOptionGraphicsItem* style, QWidget* widget)
+    void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
     {
         painter->save();
         QRectF bound = boundingRect();
@@ -165,16 +167,26 @@ public:
         setData(KeyDisplayText, text);
         setPlainText(text);
     }
+
+    int type() const
+    {
+        return AchievementType;
+    }
 };
 
 class ActionItem : public Item
 {
 public:
-    ActionItem(const QString& uuid, const QString& text, QGraphicsItem* parent = 0);
+    ActionItem(const QString& uuid, const QString& text, QGraphicsItem* parent = 0)
         : Item(uuid, parent)
     {
         setData(KeyDisplayText, text);
         setPlainText(text);
+    }
+
+    int type() const
+    {
+        return ActionType;
     }
 };
 
@@ -184,23 +196,6 @@ public:
     WorkSpaceScene(QObject* parent = 0)
         : QGraphicsScene(parent)
     {
-    }
-
-    QMap<QString, QString> changedItems() const
-    {
-        QMap<QString, QString> changes;
-        foreach (QGraphicsItem* item, items())
-        {
-            if (AchievementType!=item->type()&&ActionType!=item->type())
-                continue;
-
-            if (item->data(KeyDisplayText).toString()!=item->toPlainText()) {
-                const QString uuid = item->data(KeyUuid).toString();
-                changes[uuid] = item->toPlainText();
-                item->setData(KeyDisplayText, item->toPlainText());
-            }
-        }
-        return changes;
     }
 };
 
@@ -242,10 +237,10 @@ void Edge::adjust()
     const int x = m_sourcePoint.x() * .75f + m_destPoint.x() * .25f;
 
     m_controlPoint1.setX(x);
-    m_controlPoint1.setY(destPoint.y());
+    m_controlPoint1.setY(m_destPoint.y());
 
     m_controlPoint2.setX(x);
-    m_controlPoint2.setY(destPoint.y());
+    m_controlPoint2.setY(m_destPoint.y());
 }
 
 } // namespace
@@ -266,7 +261,13 @@ struct MindMapView::Private
         QList<QGraphicsItem*> items = m_workSpaceScene->selectedItems();
         if (items.isEmpty())
             return NULL;
-        return qgraphicsitem_cast<AchievementItem*>(items.at(0));
+
+        QGraphicsItem* item = items.at(0);
+        if (AchievementType==item->type()) {
+            return static_cast<AchievementItem*>(item);
+        }
+        return NULL;
+        //return qgraphicsitem_cast<AchievementItem*>(items.at(0));
     }
 
     ActionItem* selectedActionItem() const
@@ -274,7 +275,12 @@ struct MindMapView::Private
         QList<QGraphicsItem*> items = m_workSpaceScene->selectedItems();
         if (items.isEmpty())
             return NULL;
-        return qgraphicsitem_cast<ActionItem*>(items.at(0));
+        QGraphicsItem* item = items.at(0);
+        if (ActionType==item->type()) {
+            return static_cast<ActionItem*>(item);
+        }
+        return NULL;
+        //return qgraphicsitem_cast<ActionItem*>(items.at(0));
     }
 };
 
@@ -282,7 +288,19 @@ MindMapView::MindMapView(QWidget* parent)
     : QWidget(parent)
     , m_pvt(new Private)
 {
-    m_pvt->m_workSpaceScene = new internal::WorkSpaceScene(this);
+    m_pvt->m_workSpaceScene = new WorkSpaceScene(this);
+
+    QSplitter* splitter = new QSplitter(this);
+    splitter->addWidget(new QWidget(this));
+
+    QGraphicsView* graphicsView = new QGraphicsView(this);
+    graphicsView->setScene(m_pvt->m_workSpaceScene);
+    splitter->addWidget(graphicsView);
+
+    splitter->setOrientation(Qt::Horizontal);
+    QHBoxLayout* layout = new QHBoxLayout;
+    layout->addWidget(splitter);
+    setLayout(layout);
     startTimer(200);
 }
 
@@ -309,7 +327,7 @@ QString MindMapView::selectedAchievementItem() const
     if (!item)
         return QString();
 
-    return item->data(KeyUuid);
+    return item->data(KeyUuid).toString();
 }
 
 QString MindMapView::selectedActionItem() const
@@ -317,7 +335,7 @@ QString MindMapView::selectedActionItem() const
     ActionItem* item = m_pvt->selectedActionItem();
     if (!item)
         return QString();
-    return item->data(KeyUuid);
+    return item->data(KeyUuid).toString();
 }
 
 bool MindMapView::createAchievementItem(const QString& uuid, const QString& text)
@@ -329,7 +347,7 @@ bool MindMapView::createAchievementItem(const QString& uuid, const QString& text
 
 bool MindMapView::createActionItem(const QString& uuid, const QString& text)
 {
-    AchievementItem* achievementItem = selectedAchievementItem();
+    AchievementItem* achievementItem = m_pvt->selectedAchievementItem();
     if (!achievementItem)
         return false;
 
@@ -339,17 +357,23 @@ bool MindMapView::createActionItem(const QString& uuid, const QString& text)
     return true;
 }
 
-void MindMapView::timerEvent(QTimerEvent* ev)
+void MindMapView::timerEvent(QTimerEvent* /*ev*/)
 {
-
-    foreach (QGraphicsItem* item, items())
+    Q_ASSERT(m_pvt->m_workSpaceScene);
+    foreach (QGraphicsItem* graphicsItem, m_pvt->m_workSpaceScene->items())
     {
-        if (AchievementType!=item->type()&&ActionType!=item->type())
+        if ( AchievementType!=graphicsItem->type() && ActionType!=graphicsItem->type() )
             continue;
 
+        Item* item = static_cast<Item*>(graphicsItem);
         if (item->data(KeyDisplayText).toString()!=item->toPlainText()) {
             const QString uuid = item->data(KeyUuid).toString();
-            changes[uuid] = item->toPlainText();
+            if (AchievementType==item->type()) {
+                emit achievementValueChanged(uuid, 0, item->toPlainText());
+            } else if (ActionType==item->type()) {
+                emit actionValueChanged(uuid, 0, item->toPlainText());
+            }
+
             item->setData(KeyDisplayText, item->toPlainText());
         }
     }

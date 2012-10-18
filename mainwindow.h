@@ -3,36 +3,21 @@
 #define __MAINWINDOW_H__
 
 #include <QMainWindow>
-#include <QModelIndex>
-
-#include "model/root.h"
-
-
-class MindMapScene;
-class QAction;
-class QTreeView;
-class QWidget;
 
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
-
 public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
 public slots:
-    void newAchivement();
-    void newActionItem();
     void slotSceneSelectionChanged();
     void updateActions();
 
 private:
     struct Private;
-    Private* m_pvt;
-    //model::RootPtr model;
-    //MindMapScene*	m_scene;
-    //view::Achievement* m_selectedAchievement;
+    QScopedPointer<Private> m_pvt;
 };
 
 #endif

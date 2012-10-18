@@ -10,12 +10,14 @@ public:
     explicit MindMapViewController(QObject* parent = 0);
     ~MindMapViewController();
     void setModelAndView(model::BaseModel*, view::MindMapView*);
+
+public slots:
     void createAchievement();
     void createAction();
 
 private slots:
-    void achievementCreated(QSharedPointer<Achievement>);
-    void actionCreated(QSharedPointer<Action>);
+    void achievementCreated(QSharedPointer<model::Achievement>);
+    void actionCreated(QSharedPointer<model::Action>);
 
 private:
     struct Private;

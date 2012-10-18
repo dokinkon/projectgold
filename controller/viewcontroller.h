@@ -2,6 +2,8 @@
 #define __VIEW_CONTROLLER_H__
 
 #include <QObject>
+#include <QSharedPointer>
+#include <QScopedPointer>
 #include "fwdeclaration.h"
 
 class ViewController : public QObject

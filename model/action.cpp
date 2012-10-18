@@ -11,14 +11,13 @@ struct Action::Private
     int time;
 
     Private()
-        : achievement(NULL)
     {
     }
 };
 
 Action::Action(const QString& input, QSharedPointer<Achievement> achievementPtr, const QUuid& uuid)
     : Item(uuid)
-    : m_pvt(new Private)
+    , m_pvt(new Private)
 {
     m_pvt->achievementPtr = achievementPtr.toWeakRef();
     setText(input);

@@ -3,8 +3,16 @@
 
 #include "fwdeclaration.h"
 #include <QWidget>
+#include <QScopedPointer>
 
 namespace view {
+
+enum DataRole {
+    RoleUuid = 65535,
+    RoleDisplayText,
+    RoleIcon,
+    RoleColor
+};
 
 class BaseView : public QWidget
 {
@@ -12,20 +20,10 @@ class BaseView : public QWidget
 public:
     explicit BaseView(QWidget *parent = 0);
     virtual ~BaseView();
-    void setModel(model::BaseModel*);
-    model::BaseModel* model() const;
     
-signals:
-    
-public slots:
-    void refreshContent(int, const QList<model::Item*>&);
-
 private:
-    virtual void refreshContentImpl(int, const QList<model::Item*>&);
-
     struct Private;
-    Private* m_pvt;
-    
+    QScopedPointer<Private> m_pvt;
 };
 
 } // namespace

@@ -1,5 +1,6 @@
 #include "controller/dependenceviewcontroller.h"
 #include "model/basemodel.h"
+#include "model/action.h"
 #include "view/actiondependenceview.h"
 
 #include <QtGui>
@@ -26,21 +27,52 @@ ActionDependenceViewController::ActionDependenceViewController(QObject* parent)
 
 ActionDependenceViewController::~ActionDependenceViewController()
 {
-    delete m_pvt;
 }
 
 void ActionDependenceViewController::setModelAndView(model::BaseModel* model, view::ActionDependenceView* view)
 {
     m_pvt->m_model = model;
     m_pvt->m_view  = view;
+
+    connect(model,
+            SIGNAL(actionCreated(QSharedPointer<model::Action>)),
+            SLOT(createAction(QSharedPointer<model::Action>)));
+
+    connect(model,
+            SIGNAL(actionValueChanged(const QString&, int, const QVariant&)),
+            view,
+            SLOT(setActionValue(const QString&, int, const QVariant&)));
+
     connect(view->workSpaceView(),
             SIGNAL(actionItemDropped(const QString&)),
             SLOT(didDropActionItemIntoWorkspace(const QString&)));
+}
+
+void ActionDependenceViewController::createAction(QSharedPointer<model::Action> actionPtr)
+{
+    Q_ASSERT(!actionPtr.isNull());
+    m_pvt->m_view->createActionInListView(actionPtr->uuid().toString(), actionPtr->text());
 }
 
 void ActionDependenceViewController::didDropActionItemIntoWorkspace(const QString& uuid)
 {
     Q_ASSERT(m_pvt->m_view);
     qDebug() << "didDropActionItemIntoWorkspace: " << uuid;
+    QSharedPointer<model::Action> actionPtr = m_pvt->m_model->action(uuid);
+    Q_ASSERT(!actionPtr.isNull());
 
+    m_pvt->m_view->createActionInWorkSpaceView(actionPtr->uuid().toString(), actionPtr->text());
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
