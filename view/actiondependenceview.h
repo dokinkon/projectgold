@@ -59,6 +59,9 @@ public:
 
     WorkSpaceView* workSpaceView() const;
 
+signals:
+    void actionItemHasConnected(const QString& sourceUuid, const QString& destUuid);
+
 public slots:
     void setActionValue(const QString& uuid, int role, const QVariant& value);
 

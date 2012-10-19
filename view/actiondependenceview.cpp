@@ -6,6 +6,8 @@
 #include <QtGui>
 #include <QtCore>
 
+
+
 namespace view { namespace internal {
 
 
